@@ -1,4 +1,3 @@
-# Example file showing a circle moving on screen
 import pygame
 import math
 
@@ -9,6 +8,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+player_move_speed = 700
 player_radius = 40
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
@@ -26,14 +26,16 @@ while running:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
+        player_pos.y -= player_move_speed * dt
     if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
+        player_pos.y += player_move_speed * dt
     if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
+        player_pos.x -= player_move_speed * dt
     if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
-
+        player_pos.x += player_move_speed * dt
+    
+    # prevents player from moving off the screen
+    # credits to max knoth for writing this approximately 10 minutes after first installing pygame
     if not (0 < player_pos.x - player_radius):
         player_pos.x += abs(player_radius - player_pos.x)
     if not (player_pos.x + player_radius < screen.get_width()):
