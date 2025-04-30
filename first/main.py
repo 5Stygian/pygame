@@ -22,6 +22,7 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
 
+    # player
     pygame.draw.circle(screen, "red", player_pos, player_radius)
 
     keys = pygame.key.get_pressed()
@@ -33,7 +34,7 @@ while running:
         player_pos.x -= player_move_speed * dt
     if keys[pygame.K_d]:
         player_pos.x += player_move_speed * dt
-    
+
     # prevents player from moving off the screen
     # credits to max knoth for writing this approximately 10 minutes after first installing pygame
     if not (0 < player_pos.x - player_radius):
@@ -46,6 +47,8 @@ while running:
     if not (player_pos.y + player_radius < screen.get_height()):
         player_pos.y -= abs(screen.get_height() - player_pos.y - player_radius)
 
+    
+        
     # flip() the display to put your work on screen
     pygame.display.flip()
 
