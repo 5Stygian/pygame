@@ -1,5 +1,6 @@
 import pygame
 import math
+import sys
 
 # pygame setup
 pygame.init()
@@ -8,9 +9,22 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-player_move_speed = 700
-player_radius = 40
+# player vars
+player_move_speed = 400
+player_radius = 15
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+dash_dist = 5000
+touchable = True
+
+# gui vars
+## general
+### fonts
+main_font = pygame.font.SysFont('Corbel',35) 
+## main menu
+### difficulty buttons
+#### easy
+easy_diff_text = main_font.render('quit' , True , "rgb(0,0,0)")
+easy_diff_button = 
 
 while running:
     # poll for events
@@ -18,9 +32,34 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            # start dodge
+            if event.key == pygame.K_SPACE and keys[pygame.K_w]:
+                touchable = False
+                player_pos.y -= dash_dist * dt
+                touchable = True
+            if event.key == pygame.K_SPACE and keys[pygame.K_s]:
+                touchable = False
+                player_pos.y += dash_dist * dt
+                touchable = True
+            if event.key == pygame.K_SPACE and keys[pygame.K_a]:
+                touchable = False
+                player_pos.x -= dash_dist * dt
+                touchable = True
+            if event.key == pygame.K_SPACE and keys[pygame.K_d]:
+                touchable = False
+                player_pos.x += dash_dist * dt
+                touchable = True
+            # end dodge
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # button event handling
+            pass
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
+
+    # save the position of the mouse every frame
+    mouse_pos = pygame.mouse.get_pos() 
 
     # player
     pygame.draw.circle(screen, "red", player_pos, player_radius)
