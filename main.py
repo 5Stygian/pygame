@@ -1,8 +1,5 @@
 import pygame
-import pygame_menu
-import math
-
-import pygame_menu.events
+import pygame_gui
 
 # pygame setup
 pygame.init()
@@ -16,7 +13,7 @@ screen_dims = (screen.get_width(), screen.get_height())
 player_move_speed = 400
 player_radius = 15
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-dash_dist = 5000
+dodge_dist = 5000
 touchable = True
 load_player = False
 
@@ -34,16 +31,19 @@ def start_easy():
 ## main menu
 on_main_menu = True
 # some code comes from the pygame_menu documentation
-main_menu = pygame_menu.Menu('Main Menu', screen_dims[0], screen_dims[1],
-                             theme=pygame_menu.themes.THEME_SOLARIZED)
+manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="theme_basic.json")
 
-main_menu.add.button("Play", load)
+play_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 275), (100, 50)),
+                                           text='Play',
+                                           manager=manager,
+                                           command=load)
 
 # game loop
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
+        manager.process_events(event)
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
@@ -51,22 +51,22 @@ while running:
             # dodge in the direction you are currently moving
             if event.key == pygame.K_SPACE and keys[pygame.K_w]:
                 touchable = False
-                player_pos.y -= dash_dist * dt
+                player_pos.y -= dodge_dist * dt
                 touchable = True
                 print("Dodge executed | up")
             if event.key == pygame.K_SPACE and keys[pygame.K_s]:
                 touchable = False
-                player_pos.y += dash_dist * dt
+                player_pos.y += dodge_dist * dt
                 touchable = True
                 print("Dodge executed | down")
             if event.key == pygame.K_SPACE and keys[pygame.K_a]:
                 touchable = False
-                player_pos.x -= dash_dist * dt
+                player_pos.x -= dodge_dist * dt
                 touchable = True
                 print("Dodge executed | left")
             if event.key == pygame.K_SPACE and keys[pygame.K_d]:
                 touchable = False
-                player_pos.x += dash_dist * dt
+                player_pos.x += dodge_dist * dt
                 touchable = True
                 print("Dodge executed | right")
             # end dodge
@@ -80,7 +80,10 @@ while running:
         pygame.draw.circle(screen, "red", player_pos, player_radius)
     else: 
         pass
-
+    
+    # player movement
+    # if a key is held, move in that direction
+    # from boilerplate found in docs
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= player_move_speed * dt
@@ -107,8 +110,8 @@ while running:
     # g/ui
     ## main menu
     if on_main_menu == True:
-        main_menu.draw(surface=screen)
-        main_menu.update(pygame.event.get())
+        manager.update(dt)
+        manager.draw_ui(screen)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
