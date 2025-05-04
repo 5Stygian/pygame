@@ -1,6 +1,8 @@
 import pygame
+import pygame_menu
 import math
-import sys
+
+import pygame_menu.events
 
 # pygame setup
 pygame.init()
@@ -18,29 +20,27 @@ dash_dist = 5000
 touchable = True
 load_player = False
 
-# gui vars
-## general
-### fonts
-main_font = pygame.font.SysFont('Corbel',35) 
-## main menu
-### difficulty buttons
-#### easy
-easy_diff_nonhover = (75, 201, 52)
-easy_diff_hover = (78, 227, 48)
-easy_diff_text = main_font.render('Easy' , True, "black")
-easy_diff_dims = ()
-blit_easy = False
-
 # functions
 def load():
-    global load_player
+    global load_player, on_main_menu
+    on_main_menu = False
     load_player = True
+    print("Play button clicked")
 
 def start_easy():
-    global blit_easy
-    blit_easy = True
     load()
 
+# g/ui
+## main menu
+on_main_menu = True
+# some code comes from the pygame_menu documentation
+main_menu = pygame_menu.Menu('Main Menu', screen_dims[0], screen_dims[1],
+                             theme=pygame_menu.themes.THEME_SOLARIZED)
+
+main_menu.add.button("Play",
+                     load)
+
+# game loop
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -54,33 +54,28 @@ while running:
                 touchable = False
                 player_pos.y -= dash_dist * dt
                 touchable = True
+                print("Dodge executed | up")
             if event.key == pygame.K_SPACE and keys[pygame.K_s]:
                 touchable = False
                 player_pos.y += dash_dist * dt
                 touchable = True
+                print("Dodge executed | down")
             if event.key == pygame.K_SPACE and keys[pygame.K_a]:
                 touchable = False
                 player_pos.x -= dash_dist * dt
                 touchable = True
+                print("Dodge executed | left")
             if event.key == pygame.K_SPACE and keys[pygame.K_d]:
                 touchable = False
                 player_pos.x += dash_dist * dt
                 touchable = True
+                print("Dodge executed | right")
             # end dodge
-        
-        if event.type == pygame.MOUSEBUTTONUP:
-            # main menu difficulty 
-
-            # easy
-            if screen_dims[0]/2 <= mouse_pos[0] <= screen_dims[0]/2+140 and screen_dims[1]/2 <= mouse_pos[1] <= screen_dims[1]/2+40: 
-                start_easy()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
 
-    # save the position of the mouse_pos every frame
-    mouse_pos = pygame.mouse.get_pos() 
-
+    # player start
     # loads the player when a difficulty is selected
     if load_player == True:
         pygame.draw.circle(screen, "red", player_pos, player_radius)
@@ -98,7 +93,7 @@ while running:
         player_pos.x += player_move_speed * dt
 
     # prevents player from moving off the screen
-    # credits to max knoth for writing this approximately 10 minutes after first installing pygame
+    # thanks to max knoth for writing this approximately 10 minutes after first installing pygame
     if not (0 < player_pos.x - player_radius):
         player_pos.x += abs(player_radius - player_pos.x)
     if not (player_pos.x + player_radius < screen.get_width()):
@@ -109,25 +104,12 @@ while running:
     if not (player_pos.y + player_radius < screen.get_height()):
         player_pos.y -= abs(screen.get_height() - player_pos.y - player_radius)
     # player end
-
-    # gui
+    
+    # g/ui
     ## main menu
-    ### easy
-    # some of this code comes from a geeksforgeeks article about pygame buttons
-    if screen_dims[0]/2 <= mouse_pos[0] <= screen_dims[0]/2+140 and screen_dims[1]/2 <= mouse_pos[1] <= screen_dims[1]/2+40: 
-        pygame.draw.rect(screen,easy_diff_hover,[screen_dims[0]/2,screen_dims[1]/2,140,40]) 
-    else:
-        pygame.draw.rect(screen,easy_diff_nonhover,[screen_dims[0]/2,screen_dims[1]/2,140,40])
-    
-    easy_text = 0
-    while easy_text < 1:
-        screen.blit(easy_diff_text, (screen_dims[0]/2+50, screen_dims[1]/2))
-        easy_text += 1
-    
-    if blit_easy == True:
-        screen.blit(easy_diff_text, (screen_dims[0]/2+50, screen_dims[1]/2))
-    else:
-        pass
+    if on_main_menu == True:
+        main_menu.draw(surface=screen)
+        main_menu.update(pygame.event.get())
 
     # flip() the display to put your work on screen
     pygame.display.flip()
