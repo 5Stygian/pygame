@@ -37,8 +37,7 @@ on_main_menu = True
 main_menu = pygame_menu.Menu('Main Menu', screen_dims[0], screen_dims[1],
                              theme=pygame_menu.themes.THEME_SOLARIZED)
 
-main_menu.add.button("Play",
-                     load)
+main_menu.add.button("Play", load)
 
 # game loop
 while running:
