@@ -18,14 +18,32 @@ touchable = True
 load_player = False
 
 # functions
+## difficulty functions
+# these controll spawn rate of boxes and score gained
+def start_easy():
+    global difficulty
+    difficulty = 1
+    load()
+    print("Easy mode")
+
+def start_medium():
+    global difficulty
+    difficulty = 2
+    load()
+    print("Medium mode")
+
+def start_hard():
+    global difficulty
+    difficulty = 3
+    load()
+    print("Hard mode")
+
+## general functions
 def load():
     global load_player, on_main_menu
     on_main_menu = False
     load_player = True
     print("Play button clicked")
-
-def start_easy():
-    load()
 
 # g/ui
 ## main menu
@@ -33,7 +51,7 @@ on_main_menu = True
 # some code comes from the pygame_menu documentation
 manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="theme_basic.json")
 
-play_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 275), (100, 50)),
+play_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((screen_dims[0]/2-50, screen_dims[1]/2), (100, 50)),
                                            text='Play',
                                            manager=manager,
                                            command=load)
