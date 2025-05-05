@@ -1,6 +1,8 @@
 import pygame
 import pygame_gui
 
+from pygame_gui.core import ObjectID
+
 # pygame setup
 pygame.init()
 pygame.display.set_caption("Game")
@@ -20,7 +22,7 @@ load_player = False
 
 # functions
 ## difficulty functions
-# these controll spawn rate of boxes and score gained
+# these control spawn rate of boxes and score gained
 def start_easy():
     global difficulty
     difficulty = 1
@@ -52,10 +54,20 @@ on_main_menu = True
 # some code comes from the pygame_menu documentation
 manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="theme_basic.json")
 
-play_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((screen_dims[0]/2-50, screen_dims[1]/2), (100, 50)),
-                                           text='Play',
-                                           manager=manager,
-                                           command=load)
+# labels dont work for some reason so i will use buttons as labels
+title = pygame_gui.elements.UIButton(
+    relative_rect=pygame.Rect((screen_dims[0]/2-225, screen_dims[1]/2-350), (450, 50)),
+    text='Game Title',
+    manager=manager,
+    object_id=ObjectID(class_id='@blabel')
+)
+
+play_button = pygame_gui.elements.UIButton(
+    relative_rect=pygame.Rect((screen_dims[0]/2-50, screen_dims[1]/2), (100, 50)),
+    text='Play',
+    manager=manager,
+    command=load
+)
 
 # game loop
 while running:

@@ -1,6 +1,8 @@
 import pygame
 import pygame_gui
 
+from main import load
+
 # pygame setup
 pygame.init()
 pygame.display.set_caption("Game Launcher")
@@ -14,7 +16,7 @@ screen_dims = (screen.get_width(), screen.get_height())
 manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="theme_basic.json")
 
 title = pygame_gui.elements.ui_label(
-    relative_rect=((screen_dims[0]/2, screen_dims[1]/2+290), (100, 150),
+    relative_rect=((screen_dims[0]/2, screen_dims[1]/2+290), (100, 150)),
     text='Game Title',
     manager=manager
 )
