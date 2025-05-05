@@ -13,10 +13,18 @@ screen_dims = (screen.get_width(), screen.get_height())
 # g/ui
 manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="theme_basic.json")
 
-play_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((screen_dims[0]/2-50, screen_dims[1]/2), (100, 50)),
-                                           text='Play',
-                                           manager=manager,
-                                           command=load)
+title = pygame_gui.elements.ui_label(
+    relative_rect=((screen_dims[0]/2, screen_dims[1]/2+290), (100, 150),
+    text='Game Title',
+    manager=manager
+)
+
+play_button = pygame_gui.elements.UIButton(
+    relative_rect=pygame.Rect((screen_dims[0]/2-50, screen_dims[1]/2), (100, 50)),
+    text='Play',
+    manager=manager,
+    command=load
+)
 
 # game loop
 while running:
