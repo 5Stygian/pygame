@@ -10,5 +10,21 @@
             "shape_corner_radius": "10",
             "border_width": "2"
         }
+    },
+    "label": {
+        "colours": {
+            "normal_text": "#eeeeee",
+            "text_shadow": "#4aaeff"
+        },
+        "font": {
+            "name": "times new roman",
+            "size": 24,
+            "bold": 1
+        },
+        "misc": {
+            "text_shadow": "1",
+            "text_shadow_size": "1",
+            "text_shadow_offset": "0,0"
+        }
     }
 }
