@@ -1,28 +1,29 @@
 {
-    "label": {
+    "@blabel": {
         "colours": {
-            "normal_text": "#eeeeee",
-            "hovered_text": "#eeeeee",
-            "text_shadow": "#4aaeff",
+            "normal_text": "#efefef",
+            "hovered_text": "#efefef",
+            "active_text": "#efefef",
             "normal_bg":"#0000",
             "hovered_bg":"#0000",
             "selected_bg": "#0000",
-            "active_bg": "#0000",
             "normal_border": "#0000",
             "hovered_border": "#0000",
             "selected_border": "#0000",
-            "active_border": "#0000",
-            "filled_bar": "#0000"
+            "filled_bar": "#0000",
+            "normal_text_shadow": "#2A64D7",
+            "hovered_text_shadow": "#2A64D7",
+            "active_text_shadow": "#2A64D7"
         },
         "font": {
             "name": "times new roman",
-            "size": 24,
+            "size": 64,
             "bold": 1
         },
         "misc": {
             "text_shadow": "1",
             "text_shadow_size": "1",
-            "text_shadow_offset": "0,0"
+            "text_shadow_offset": "1,1"
         }
     }
 }

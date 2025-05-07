@@ -3,9 +3,12 @@ import pygame_gui
 
 from pygame_gui.core import ObjectID
 
+# print actions to the terminal
+debug_mode = True
+
 # pygame setup
 pygame.init()
-pygame.display.set_caption("Game")
+pygame.display.set_caption("Just Dodge")
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
@@ -27,50 +30,71 @@ def start_easy():
     global difficulty
     difficulty = 1
     load()
-    print("Easy mode")
+    if debug_mode == True:
+        print("Easy mode")
 
 def start_medium():
     global difficulty
     difficulty = 2
     load()
-    print("Medium mode")
+    if debug_mode == True:
+        print("Medium mode")
 
 def start_hard():
     global difficulty
     difficulty = 3
     load()
-    print("Hard mode")
+    if debug_mode == True:
+        print("Hard mode")
 
 ## general functions
 def load():
     global load_player, on_main_menu
     on_main_menu = False
     load_player = True
-    print("Play button clicked")
+    if debug_mode == True:
+        print("Play button clicked")
 
 # g/ui
 ## main menu
 on_main_menu = True
 # some code comes from the pygame_menu documentation
+# load themes. classes are stored in seperate files to make them more readable 
 manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="theme_basic.json")
+manager.get_theme().load_theme('theme_blabel.json')
+manager.get_theme().load_theme('theme_interactable_button.json')
 
 # labels dont work for some reason so i will use buttons as labels
 title = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((screen_dims[0]/2-745, screen_dims[1]/2-350), (450, 50)),
-    text='Game Title',
     manager=manager,
+    relative_rect=pygame.Rect((screen_dims[0]/2-710, screen_dims[1]/2-360), (450, 70)),
+    text='Game Title',
     object_id=ObjectID(class_id='@blabel')
 )
 
 play_button = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((screen_dims[0]/2-645, screen_dims[1]/2), (100, 50)),
-    text='Play',
     manager=manager,
+    relative_rect=pygame.Rect((screen_dims[0]/2-635, screen_dims[1]/2), (100, 50)),
+    text='Play',
     command=load,
     object_id=ObjectID(class_id='@interactable_button')
 )
 
+# GET TS WORKING LIL BRO
+'''difficulty_dropdown = pygame_gui.elements.UIDropDownMenu(
+    manager=manager,
+    options_list=[
+        "Easy",
+        "Medium",
+        "Hard"
+    ],
+    starting_option="Easy",
+    relative_rect=pygame.Rect((screen_dims[0]/2-645, screen_dims[1]/2+65), (145, 55)),
+    object_id=ObjectID(class_id='@difficulty_dropdown')
+)'''
+
 # game loop
+print("\"Just Dodge\" vALPHA")
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -85,22 +109,26 @@ while running:
                 touchable = False
                 player_pos.y -= dodge_dist * dt
                 touchable = True
-                print("Dodge executed | up")
+                if debug_mode == True:
+                    print("Dodge executed | up")
             if event.key == pygame.K_SPACE and keys[pygame.K_s]:
                 touchable = False
                 player_pos.y += dodge_dist * dt
                 touchable = True
-                print("Dodge executed | down")
+                if debug_mode == True:
+                    print("Dodge executed | down")
             if event.key == pygame.K_SPACE and keys[pygame.K_a]:
                 touchable = False
                 player_pos.x -= dodge_dist * dt
                 touchable = True
-                print("Dodge executed | left")
+                if debug_mode == True:
+                    print("Dodge executed | left")
             if event.key == pygame.K_SPACE and keys[pygame.K_d]:
                 touchable = False
                 player_pos.x += dodge_dist * dt
                 touchable = True
-                print("Dodge executed | right")
+                if debug_mode == True:
+                    print("Dodge executed | right")
             # end dodge
 
     # fill the screen with a color to wipe away anything from last frame
