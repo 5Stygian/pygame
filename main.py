@@ -13,12 +13,15 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-screen_dims = (screen.get_width(), screen.get_height())
+screen_dims = (
+    screen.get_width(), 
+    screen.get_height()
+)
 
 # player vars
 player_move_speed = 400
 player_radius = 15
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player_pos = pygame.Vector2(screen_dims[0]/2, screen_dims[1]/2)
 dodge_dist = 5000
 touchable = True
 load_player = False
@@ -75,8 +78,20 @@ play_button = pygameGUI.Text(
     # add x and y
 ); menu_group.add(play_button)
 
+# sprites
+
 class Killbox(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, color, width, height):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([width, height])
+        self.image.fill(color)
+
+        self.rect = self.image.get_rect()
+    
+    def vert_lines_fullscreen(self):
+        pass
+
+    def horz_lines_fullscreen(self):
         pass
 
 # game loop
