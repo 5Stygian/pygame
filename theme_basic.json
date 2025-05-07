@@ -1,14 +1,25 @@
 {
     "button": {
         "colours": {
-            "normal_border": "White",
-            "normal_bg": "SlateGray",
-            "normal_text": "White"
+            "normal_bg":"#0000",
+            "hovered_bg":"#0000",
+            "selected_bg": "#0000",
+            "active_bg": "#0000",
+            "normal_border": "#0000",
+            "hovered_border": "#0000",
+            "selected_border": "#0000",
+            "active_border": "#0000",
+            "filled_bar": "#0000"
+        },
+        "font": {
+            "name": "times new roman",
+            "size": 36,
+            "bold": 1
         },
         "misc": {
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": "10",
-            "border_width": "2"
+            "text_shadow": "1",
+            "text_shadow_size": "1",
+            "text_shadow_offset": "0,0"
         }
     },
     "@blabel": {
@@ -19,7 +30,10 @@
             "normal_border": "#0000",
             "hovered_border": "#0000",
             "selected_border": "#0000",
-            "filled_bar": "#0000"
+            "filled_bar": "#0000",
+            "normal_text_shadow": "#2A64D7",
+            "hovered_text_shadow": "#2A64D7",
+            "active_text_shadow": "#2A64D7"
         },
         "font": {
             "name": "times new roman",
@@ -29,7 +43,12 @@
         "misc": {
             "text_shadow": "1",
             "text_shadow_size": "1",
-            "text_shadow_offset": "0,0"
+            "text_shadow_offset": "1,1"
+        }
+    },
+    "@interactable_button": {
+        "colours": {
+            "hovered_text": "#ffffff"
         }
     },
     "label": {

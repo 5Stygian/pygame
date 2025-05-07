@@ -56,17 +56,18 @@ manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="the
 
 # labels dont work for some reason so i will use buttons as labels
 title = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((screen_dims[0]/2-225, screen_dims[1]/2-350), (450, 50)),
+    relative_rect=pygame.Rect((screen_dims[0]/2-745, screen_dims[1]/2-350), (450, 50)),
     text='Game Title',
     manager=manager,
     object_id=ObjectID(class_id='@blabel')
 )
 
 play_button = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect((screen_dims[0]/2-50, screen_dims[1]/2), (100, 50)),
+    relative_rect=pygame.Rect((screen_dims[0]/2-645, screen_dims[1]/2), (100, 50)),
     text='Play',
     manager=manager,
-    command=load
+    command=load,
+    object_id=ObjectID(class_id='@interactable_button')
 )
 
 # game loop
