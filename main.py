@@ -75,6 +75,10 @@ play_button = pygameGUI.Text(
     # add x and y
 ); menu_group.add(play_button)
 
+class Killbox(pygame.sprite.Sprite):
+    def __init__(self):
+        pass
+
 # game loop
 print("\"Just Dodge\" vALPHA")
 while running:
