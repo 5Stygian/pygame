@@ -1,6 +1,6 @@
 import pygame
+import pygameGUI # thank you max <3
 import pygame_gui
-
 from pygame_gui.core import ObjectID
 
 # print actions to the terminal
@@ -57,41 +57,23 @@ def load():
 
 # g/ui
 ## main menu
+menu_group = pygame.sprite.Group()
 on_main_menu = True
-# some code comes from the pygame_menu documentation
-# load themes. classes are stored in seperate files to make them more readable 
-manager = pygame_gui.UIManager((screen_dims[0], screen_dims[1]), theme_path="theme_basic.json")
-manager.get_theme().load_theme('theme_blabel.json')
-manager.get_theme().load_theme('theme_interactable_button.json')
+font = pygame.font.Font("Rubik-VariableFont_wght.ttf", 70)
 
-# labels dont work for some reason so i will use buttons as labels
-title = pygame_gui.elements.UIButton(
-    manager=manager,
-    relative_rect=pygame.Rect((screen_dims[0]/2-710, screen_dims[1]/2-360), (450, 70)),
-    text='Game Title',
-    object_id=ObjectID(class_id='@blabel')
-)
+menu = pygameGUI.Menu(
+    (47,86,214), 
+    "Placeholder", 
+    font, 
+    500, 720
+); menu_group.add(menu)
 
-play_button = pygame_gui.elements.UIButton(
-    manager=manager,
-    relative_rect=pygame.Rect((screen_dims[0]/2-635, screen_dims[1]/2), (100, 50)),
-    text='Play',
-    command=load,
-    object_id=ObjectID(class_id='@interactable_button')
-)
-
-# GET TS WORKING LIL BRO
-'''difficulty_dropdown = pygame_gui.elements.UIDropDownMenu(
-    manager=manager,
-    options_list=[
-        "Easy",
-        "Medium",
-        "Hard"
-    ],
-    starting_option="Easy",
-    relative_rect=pygame.Rect((screen_dims[0]/2-645, screen_dims[1]/2+65), (145, 55)),
-    object_id=ObjectID(class_id='@difficulty_dropdown')
-)'''
+play_button = pygameGUI.Text(
+    "Play",
+    font,
+    (255,255,255),
+    # add x and y
+); menu_group.add(play_button)
 
 # game loop
 print("\"Just Dodge\" vALPHA")
@@ -99,7 +81,6 @@ while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
-        manager.process_events(event)
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
@@ -130,6 +111,11 @@ while running:
                 if debug_mode == True:
                     print("Dodge executed | right")
             # end dodge
+        if event.type == pygame.MOUSEBUTTONUP:     
+            pos = pygame.mouse.get_pos()     
+            clickedSprites = [s for s in self.all_sprites if s.rect.collidepoint(pos)]    
+            if play_button in clickedSprites:     
+                load()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -170,8 +156,7 @@ while running:
     # g/ui
     ## main menu
     if on_main_menu == True:
-        manager.update(dt)
-        manager.draw_ui(screen)
+        menu.draw(screen)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
