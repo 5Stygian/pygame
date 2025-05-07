@@ -79,7 +79,6 @@ play_button = pygameGUI.Text(
 ); menu_group.add(play_button)
 
 # sprites
-
 class Killbox(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
         pygame.sprite.Sprite.__init__(self)
@@ -89,10 +88,12 @@ class Killbox(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
     
     def vert_lines_fullscreen(self):
-        pass
+        self.rect.x = 40
+        self.rect.y = screen_dims[1]
 
     def horz_lines_fullscreen(self):
-        pass
+        self.rect.x = screen_dims[0]
+        self.rect.y = 40
 
 # game loop
 print("\"Just Dodge\" vALPHA")
