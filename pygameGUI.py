@@ -45,8 +45,7 @@ class Background(pygame.sprite.Sprite): #class for the board squares
         
 
         if image != None:
-            #self.image = pygame.image.load(image).convert_alpha()
-            pass
+            self.image = pygame.image.load(image).convert_alpha()
 
         self.image = pygame.transform.scale(self.image, (width,height))
         
@@ -61,28 +60,31 @@ class Background(pygame.sprite.Sprite): #class for the board squares
 
 
 class Text(pygame.sprite.Sprite):
-    def __init__(self, text, font, color, x, y):
+    def __init__(self, text, font, color, xy=(0,0)):
         super().__init__()
         self.font = font
         self.text = text
         self.color = color
         self.image = self.font.render(self.text, True, self.color)
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect(center=(xy[0], xy[1]))
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
 class Menu(Background):
-    def __init__(self, color, title, font, width, height, image = None,defaultC = ""):
+    def __init__(self, title, titlecolor, font, width, height, color="red", image = None, pos=(0,0),defaultC = ""):
         super().__init__(color, width, height, image, defaultC)
         self.title = title
         self.font = font
         self.width = width
         self.height = height
         self.sprites = pygame.sprite.Group()
+        self.titlecolor = titlecolor
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        titleT = self.font.render(self.title, True, (255, 255, 255))
+        titleT = self.font.render(self.title, True, self.titlecolor)
         titleTRect = titleT.get_rect(center=(self.rect.x + self.width/2, self.rect.y + 50))
         screen.blit(titleT, (self.rect.x +self.width/2 - titleTRect.width/2, self.rect.y + 50 - titleTRect.height/2.5))
         pygame.draw.line(screen, "black", (self.rect.x + 20, self.rect.y + 60 + titleTRect.height / 2), (self.rect.x + self.width - 20, self.rect.y + 60 + titleTRect.height / 2), width=5)
@@ -94,15 +96,15 @@ class Menu(Background):
         sprite.rect.y = self.rect.y + 70*(len(self.sprites)+1) -30
 
 if debug:
-    test_button = Text("Test", font, (255, 255, 255), 640, 450)
+    test_button = Text("Test", font, (255, 255, 255), (640, 450))
 
-    bg = Menu("red", "You Lose!", font, 600, 600)
+    bg = Menu("You Lose!", "white", font, 600, 600,"red")
     bg.rect.x = 300
     bg.rect.y = 200
     all_sprites.add(bg)
 
     bg.add(test_button)
-    bg.add(Text("Test", font, (255, 255, 255), 640, 450))
+    bg.add(Text("Test", font, (255, 255, 255), (640, 450)))
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

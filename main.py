@@ -3,7 +3,7 @@ import pygameGUI # thank you max <3
 import random
 
 # print actions to the terminal
-debug_mode = False
+debug_mode = True
 
 # pygame setup
 pygame.init()
@@ -64,36 +64,55 @@ on_main_menu = True
 font = pygame.font.Font("Rubik-VariableFont_wght.ttf", 70)
 
 menu = pygameGUI.Menu(
-    (47,86,214), 
-    "Placeholder", 
+    "Placeholder",
+    (255,255,255),
     font, 
     500, 720,
-    screen_dims[1]
+    (47,86,214), 
+    image=None,
+    pos=(0, 0)
 ); menu_group.add(menu)
 
 play_button = pygameGUI.Text(
     "Play",
     font,
     (255,255,255),
-    0, 0
+    (0, 0)
 ); menu_group.add(play_button); menu.add(play_button)
 
+quit_button = pygameGUI.Text(
+    "Quit",
+    font,
+    (255,255,255),
+    (0, 0)
+); menu_group.add(quit_button); menu.add(quit_button)
+
 # sprites
+## killbox
+killbox_spawn = 0
 class Killbox(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
+        self.color = color
 
         self.rect = self.image.get_rect()
     
-    def vert_lines_fullscreen(self):
-        self.rect.x = 40
-        self.rect.y = screen_dims[1]
+    def vert_lines_fullscreen(self, color):
+        # vlfs = vertical lines fullscreen
+        for i in range(10):
+            self.vlfs = pygame.rect.Rect(150*i, 0, 40, screen_dims[1])
+            pygame.draw.rect(screen, color, self.vlfs)
+
+        if debug_mode == True:
+            print("Vert lines spawned")
 
     def horz_lines_fullscreen(self):
-        self.rect.x = screen_dims[0]
-        self.rect.y = 40
+
+
+        if debug_mode == True:
+            print("Horz lines spawned")
 
 if debug_mode == True:
     print("\"Just Dodge\" vALPHA | Debug mode")
@@ -140,9 +159,16 @@ while running:
             clickedSprites = [s for s in menu_group if s.rect.collidepoint(pos)]    
             if play_button in clickedSprites:     
                 load()
+            if quit_button in clickedSprites:
+                running = False
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
+
+    # killbox spawning
+    killbox_spawn = random.randrange(1,10001)
+    if killbox_spawn in range(1, 100):
+        Killbox("red", 40, screen_dims[1]).vert_lines_fullscreen("red")
 
     # player start
     # loads the player when a difficulty is selected
@@ -190,4 +216,6 @@ while running:
     # independent physics.
     dt = clock.tick(60) / 1000
 
+if debug_mode == True:
+    print("Game closed")
 pygame.quit()
