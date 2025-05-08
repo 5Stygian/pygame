@@ -45,7 +45,8 @@ class Background(pygame.sprite.Sprite): #class for the board squares
         
 
         if image != None:
-            self.image = pygame.image.load(image).convert_alpha()
+            #self.image = pygame.image.load(image).convert_alpha()
+            pass
 
         self.image = pygame.transform.scale(self.image, (width,height))
         

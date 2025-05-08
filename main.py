@@ -1,10 +1,9 @@
 import pygame
 import pygameGUI # thank you max <3
-import pygame_gui
-from pygame_gui.core import ObjectID
+import random
 
 # print actions to the terminal
-debug_mode = True
+debug_mode = False
 
 # pygame setup
 pygame.init()
@@ -68,15 +67,16 @@ menu = pygameGUI.Menu(
     (47,86,214), 
     "Placeholder", 
     font, 
-    500, 720
+    500, 720,
+    screen_dims[1]
 ); menu_group.add(menu)
 
 play_button = pygameGUI.Text(
     "Play",
     font,
     (255,255,255),
-    # add x and y
-); menu_group.add(play_button)
+    0, 0
+); menu_group.add(play_button); menu.add(play_button)
 
 # sprites
 class Killbox(pygame.sprite.Sprite):
@@ -95,8 +95,12 @@ class Killbox(pygame.sprite.Sprite):
         self.rect.x = screen_dims[0]
         self.rect.y = 40
 
+if debug_mode == True:
+    print("\"Just Dodge\" vALPHA | Debug mode")
+else:
+    print("\"Just Dodge\" vALPHA")
+
 # game loop
-print("\"Just Dodge\" vALPHA")
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -133,7 +137,7 @@ while running:
             # end dodge
         if event.type == pygame.MOUSEBUTTONUP:     
             pos = pygame.mouse.get_pos()     
-            clickedSprites = [s for s in self.all_sprites if s.rect.collidepoint(pos)]    
+            clickedSprites = [s for s in menu_group if s.rect.collidepoint(pos)]    
             if play_button in clickedSprites:     
                 load()
 
