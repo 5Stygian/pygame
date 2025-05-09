@@ -65,18 +65,19 @@ font = pygame.font.Font("Rubik-VariableFont_wght.ttf", 70)
 
 menu = pygameGUI.Menu(
     "Placeholder",
-    (255,255,255),
+    (255, 255, 255),
     font, 
     500, 720,
-    (47,86,214), 
+    (47, 86, 214), 
     image=None,
-    pos=(0, 0)
+    pos=(0, 0),
+    hrcolor=(33, 61, 156)
 ); menu_group.add(menu)
 
 play_button = pygameGUI.Text(
     "Play",
     font,
-    (255,255,255),
+    (255, 255, 255),
     (0, 0)
 ); menu_group.add(play_button); menu.add(play_button)
 
@@ -101,9 +102,10 @@ class Killbox(pygame.sprite.Sprite):
     
     def vert_lines_fullscreen(self, color):
         # vlfs = vertical lines fullscreen
+        # vlfs deadass sounds like a linux command
         for i in range(10):
             self.vlfs = pygame.rect.Rect(150*i, 0, 60, screen_dims[1])
-            pygame.draw.rect(screen, color, self.vlfs)
+            #pygame.draw.rect(screen, color, self.vlfs)
 
         if debug_mode == True:
             print("Vert lines spawned")
@@ -113,6 +115,8 @@ class Killbox(pygame.sprite.Sprite):
 
         if debug_mode == True:
             print("Horz lines spawned")
+
+killbox = Killbox((214, 54, 101), 60, screen_dims[1])
 
 if debug_mode == True:
     print(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
@@ -169,7 +173,9 @@ while running:
     if on_main_menu == False:
         killbox_spawn = random.randrange(1,10001)
         if killbox_spawn in range(1, 100):
-            vlfs = Killbox("red", 60, screen_dims[1]).vert_lines_fullscreen((214,54,101))
+            vlfs = killbox.vert_lines_fullscreen((214,54,101))
+            if pygame.time.get_time() > 1000:
+                pygame.draw.rect(screen, color, vlfs)
 
     # player start
     # loads the player when a difficulty is selected
