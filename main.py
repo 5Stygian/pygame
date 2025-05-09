@@ -102,7 +102,7 @@ class Killbox(pygame.sprite.Sprite):
     def vert_lines_fullscreen(self, color):
         # vlfs = vertical lines fullscreen
         for i in range(10):
-            self.vlfs = pygame.rect.Rect(150*i, 0, 40, screen_dims[1])
+            self.vlfs = pygame.rect.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, color, self.vlfs)
 
         if debug_mode == True:
@@ -166,9 +166,10 @@ while running:
     screen.fill("black")
 
     # killbox spawning
-    killbox_spawn = random.randrange(1,10001)
-    if killbox_spawn in range(1, 100):
-        Killbox("red", 40, screen_dims[1]).vert_lines_fullscreen("red")
+    if on_main_menu == False:
+        killbox_spawn = random.randrange(1,10001)
+        if killbox_spawn in range(1, 100):
+            vlfs = Killbox("red", 60, screen_dims[1]).vert_lines_fullscreen((214,54,101))
 
     # player start
     # loads the player when a difficulty is selected
