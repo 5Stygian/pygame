@@ -115,7 +115,7 @@ class Killbox(pygame.sprite.Sprite):
             print("Horz lines spawned")
 
 if debug_mode == True:
-    print("\"Just Dodge\" vALPHA | Debug mode")
+    print(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
 else:
     print("\"Just Dodge\" vALPHA")
 
