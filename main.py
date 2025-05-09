@@ -1,6 +1,7 @@
 import pygame
 import pygameGUI # thank you max <3
 import random
+import threading
 
 # print actions to the terminal
 debug_mode = True
@@ -26,6 +27,17 @@ touchable = True
 load_player = False
 
 # functions
+## general functions
+def load():
+    global load_player, on_main_menu
+    on_main_menu = False
+    load_player = True
+    if debug_mode == True:
+        print("Play button clicked")
+
+def thread_timer(time):
+    pygame.time.wait(time)
+
 ## difficulty functions
 # these control spawn rate of boxes and score gained
 def start_easy():
@@ -49,13 +61,8 @@ def start_hard():
     if debug_mode == True:
         print("Hard mode")
 
-## general functions
-def load():
-    global load_player, on_main_menu
-    on_main_menu = False
-    load_player = True
-    if debug_mode == True:
-        print("Play button clicked")
+# threads
+timer_thread = threading.Thread(target=thread_timer(), args=(1000,))
 
 # g/ui
 ## main menu
@@ -100,22 +107,20 @@ class Killbox(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
     
-    def vert_lines_fullscreen(self, color):
-        # vlfs = vertical lines fullscreen
-        # vlfs deadass sounds like a linux command
+    def vert_lines_fullscreen(self):
+        # vlfs - vertical lines fullscreen
         for i in range(10):
             self.vlfs = pygame.rect.Rect(150*i, 0, 60, screen_dims[1])
-            #pygame.draw.rect(screen, color, self.vlfs)
+            pygame.draw.rect(screen, self.color, self.vlfs)
 
         if debug_mode == True:
             print("Vert lines spawned")
 
     def horz_lines_fullscreen(self):
-
-
         if debug_mode == True:
             print("Horz lines spawned")
 
+# make a killbox object
 killbox = Killbox((214, 54, 101), 60, screen_dims[1])
 
 if debug_mode == True:
@@ -161,10 +166,8 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:     
             pos = pygame.mouse.get_pos()     
             clickedSprites = [s for s in menu_group if s.rect.collidepoint(pos)]    
-            if play_button in clickedSprites:     
-                load()
-            if quit_button in clickedSprites:
-                running = False
+            if play_button in clickedSprites: load()
+            if quit_button in clickedSprites: running = False
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -173,9 +176,7 @@ while running:
     if on_main_menu == False:
         killbox_spawn = random.randrange(1,10001)
         if killbox_spawn in range(1, 100):
-            vlfs = killbox.vert_lines_fullscreen((214,54,101))
-            if pygame.time.get_time() > 1000:
-                pygame.draw.rect(screen, color, vlfs)
+            vlfs = killbox.vert_lines_fullscreen()
 
     # player start
     # loads the player when a difficulty is selected
