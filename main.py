@@ -118,7 +118,7 @@ quit_button = pygameGUI.Text(
     (255,255,255),
     (0, 0)
 ); menu_group.add(quit_button); menu.add(quit_button)
-## pause screen
+## pause menu
 pause_menu_group = pygame.sprite.Group()
 on_pause_menu = False
 
