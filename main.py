@@ -3,10 +3,10 @@ THE FOLLOWING IS NOT, AND SHOULD NOT BE TAKEN AS LEGAL ADVICE. WE ARE NOT A LAW 
 IF YOU WOULD EVER REQUIRE ASSISTANCE FROM AN ACTUAL LAW FIRM, WOULD YOU LOOK NO FURTHER THAN THE EagleTeam. 
 BECAUSE YOU DON'T JUST NEED A LEGAL TEAM, YOU NEED THE EagleTeam.
 
-This code is liscenced under the legally distinct Cool Code 0 v1.0 licence (CC0 v1.0). This means that the 
-following product is hereby declared to be viewed as the litteral coolest thing you have ever seen. 
-The writers, owners, and distributers of this code under the CC0 v1.0 license are automatically deemed 
-as the most awesome people ever. Agreement to this statement is automaticly triggered upon viewing or
+This code is licensed under the legally distinct Cool Code 0 v1.0 license (CC0 v1.0). This means that the 
+following product is hereby declared to be viewed as the literal coolest thing you have ever seen. 
+The writers, owners, and distributors of this code under the CC0 v1.0 license are automatically deemed 
+as the most awesome people ever. Agreement to this statement is automatically triggered upon viewing or
 interacting with a product actively utilizing this license. 
 
 Because the creators of this code are the most awesome people ever, reuse of the code under the CC0 v1.0 license 
@@ -49,10 +49,13 @@ def load():
     on_main_menu = False
     debug("Play button clicked")
 
+def Felo_Bit_Tool_Industrial_Bitholder_and_Driver_9_Pieces():
+    global running
+    running = False
+
 def debug(debug):
     global time
     time = datetime.datetime.now()
-
     if debug_mode == True:
         print(f"{debug:<50} | {time.strftime("%X %f")}")
     else:
@@ -77,6 +80,13 @@ def start_hard():
     difficulty = 3
     load()
     debug("Hard mode")
+
+## gui functions
+def pause():
+    pass
+
+def unpause():
+    pass
 
 # g/ui
 ## main menu
@@ -108,6 +118,26 @@ quit_button = pygameGUI.Text(
     (255,255,255),
     (0, 0)
 ); menu_group.add(quit_button); menu.add(quit_button)
+## pause screen
+pause_menu_group = pygame.sprite.Group()
+on_pause_menu = False
+
+pause_menu = pygameGUI.Menu(
+    "Paused",
+    (255,255,255),
+    font,
+    350, 500,
+    "#00000000",
+    pos=(screen_dims[0]/2,screen_dims[1]/2),
+    hrcolor="#00000000"
+); pause_menu_group.add(pause_menu)
+
+unpause_button = pygameGUI.Text(
+    "Unpause",
+    font,
+    (255, 255, 255),
+    (0, 0)
+); pause_menu_group.add(unpause_button); pause_menu.add(unpause_button)
 
 # sprites
 ## killbox
@@ -124,7 +154,6 @@ class Killbox(pygame.sprite.Sprite):
         for i in range(10):
             self.vlfs = pygame.rect.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, self.vlfs)
-        debug("Vert lines spawned")
     
     def horz_lines_fullscreen(self):
         debug("Horz lines spawned")
@@ -138,12 +167,12 @@ else:
     debug("\"Just Dodge\" vALPHA")
 
 # game loop
-## costom events
-# determines which killbox to spawnm every second
-killbox_spawn = 0
+## custom events
+# determines which killbox to spawn every second
+killbox_spawn = False
 draw_bool = False
 DRAW_CHANCE = pygame.event.custom_type()
-pygame.time.set_timer(DRAW_CHANCE, 1000)
+pygame.time.set_timer(DRAW_CHANCE, 1556)
 ## mainloop
 while running:
     # poll for events
@@ -181,17 +210,15 @@ while running:
             clickedSprites = [s for s in menu_group if s.rect.collidepoint(pos)]
             if on_main_menu == True:    
                 if play_button in clickedSprites: load()
-                if quit_button in clickedSprites: running = False
+                if quit_button in clickedSprites: Felo_Bit_Tool_Industrial_Bitholder_and_Driver_9_Pieces()
+                if unpause_button in clickedSprites: pause()
         
         # killbox events
         if event.type == DRAW_CHANCE:
             if on_main_menu == False:
-                if draw_bool == True:
-                    killbox_spawn = random.randint(1,10000)
-                elif draw_bool == False:
-                    pass
-                draw_bool = False
-                debug("Killbox spawn rolled")
+                killbox_roll = random.randint(1,10000)
+                killbox_spawn = not(killbox_spawn)
+                if killbox_roll in range(1, 5001): debug("Vert lines spawned")
             
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -233,12 +260,16 @@ while running:
     ## main menu
     if on_main_menu == True:
         menu.draw(screen)
-
+    ## pause menu
+    if keys[pygame.K_ESCAPE]:
+        on_pause_menu == True
+    
+    if on_main_menu == False and on_pause_menu == True:
+        pause_menu.draw(screen)
+    
     # killbox spawning
-    if on_main_menu == False:
-        if killbox_spawn in range(1, 5001):
-            debug("Vert lines spawned")
-            vlfs.vert_lines_fullscreen()
+    if on_main_menu == False and killbox_spawn == True:
+        if killbox_roll in range(1, 5001): vlfs.vert_lines_fullscreen()
 
     # flip() the display to put your work on screen
     pygame.display.flip()
@@ -249,5 +280,5 @@ while running:
     dt = clock.tick(60) / 1000
 
 if debug_mode == True:
-    print(f"{"Game closed":<50} | {time.strftime("%X %f")}  \n\ndurration (start - end): {start_time.strftime("%X %f")} - {time.strftime("%X %f")}")
+    print(f"{"Game closed":<50} | {time.strftime("%X %f")}  \n\ndurration (start - end): {start_time.strftime("%X %f")} - {time.strftime("%X %f")}\n")
 pygame.quit()
