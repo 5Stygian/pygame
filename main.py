@@ -152,14 +152,18 @@ class Killbox(pygame.sprite.Sprite):
     def vert_lines_fullscreen(self):
         # vlfs - vertical lines fullscreen
         for i in range(10):
-            self.vlfs = pygame.rect.Rect(150*i, 0, 60, screen_dims[1])
+            self.vlfs = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, self.vlfs)
     
     def horz_lines_fullscreen(self):
-        debug("Horz lines spawned")
+        # hlfs - horizontal lines fullscreen
+        for i in range(10):
+            self.hlfs = pygame.Rect(0, 125*i, screen_dims[0], 60)
+            pygame.draw.rect(screen, self.color, self.hlfs)
 
 # killbox objects
 vlfs = Killbox((214, 54, 101), 60, screen_dims[1])
+hlfs = Killbox((214, 54, 101), screen_dims[0], 60)
 
 if debug_mode == True:
     debug(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
@@ -168,11 +172,11 @@ else:
 
 # game loop
 ## custom events
-# determines which killbox to spawn every second
+# determines which killbox to spawn every 1.856 seconds
 killbox_spawn = False
 draw_bool = False
 DRAW_CHANCE = pygame.event.custom_type()
-pygame.time.set_timer(DRAW_CHANCE, 1556)
+pygame.time.set_timer(DRAW_CHANCE, 1856)
 ## mainloop
 while running:
     # poll for events
@@ -218,17 +222,11 @@ while running:
             if on_main_menu == False:
                 killbox_roll = random.randint(1,10000)
                 killbox_spawn = not(killbox_spawn)
-                if killbox_roll in range(1, 5001): debug("Vert lines spawned")
+                if killbox_roll in range(1, 2500): debug("Vert lines spawned")
+                if killbox_roll in range(2500, 5001): debug("Horz lines spawned")
             
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
-
-    # player start
-    # loads the player when a difficulty is selected
-    if on_main_menu == False:
-        pygame.draw.circle(screen, "red", player_pos, player_radius)
-    else: 
-        pass
     
     # player movement
     # if a key is held, move in that direction
@@ -269,7 +267,15 @@ while running:
     
     # killbox spawning
     if on_main_menu == False and killbox_spawn == True:
-        if killbox_roll in range(1, 5001): vlfs.vert_lines_fullscreen()
+        if killbox_roll in range(1, 2500): vlfs.vert_lines_fullscreen()
+        if killbox_roll in range(2501, 5000): hlfs.horz_lines_fullscreen()
+
+    # player start
+    # loads the player when a difficulty is selected
+    if on_main_menu == False:
+        pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
+    else: 
+        pass
 
     # flip() the display to put your work on screen
     pygame.display.flip()
