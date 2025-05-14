@@ -44,15 +44,18 @@ touchable = True
 
 # functions
 ## general functions
+# loads the game when the play button is clicked
 def load():
     global on_main_menu
     on_main_menu = False
     debug("Play button clicked")
 
+# ends the game
 def Felo_Bit_Tool_Industrial_Bitholder_and_Driver_9_Pieces():
     global running
     running = False
 
+# prints debugging info if debug_mode is true
 def debug(debug):
     global time
     time = datetime.datetime.now()
@@ -165,6 +168,9 @@ class Killbox(pygame.sprite.Sprite):
 vlfs = Killbox((214, 54, 101), 60, screen_dims[1])
 hlfs = Killbox((214, 54, 101), screen_dims[0], 60)
 
+vlfs_rect = pygame.Rect(vlfs)
+hlfs_rect = pygame.Rect(hlfs)
+
 if debug_mode == True:
     debug(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
 else:
@@ -207,6 +213,12 @@ while running:
                 player_pos.x += dodge_dist * dt
                 touchable = True
                 debug("Dodge executed | right")
+            
+            # open the pause menu
+            if event.key == pygame.K_ESCAPE:
+                on_pause_menu = True
+                if on_main_menu == False and on_pause_menu == True:
+                    pause_menu.draw(screen)
         
         # gui events
         if event.type == pygame.MOUSEBUTTONUP:     
@@ -258,25 +270,25 @@ while running:
     ## main menu
     if on_main_menu == True:
         menu.draw(screen)
-    ## pause menu
-    if keys[pygame.K_ESCAPE]:
-        on_pause_menu == True
-    
-    if on_main_menu == False and on_pause_menu == True:
-        pause_menu.draw(screen)
     
     # killbox spawning
     if on_main_menu == False and killbox_spawn == True:
-        if killbox_roll in range(1, 2500): vlfs.vert_lines_fullscreen()
-        if killbox_roll in range(2501, 5000): hlfs.horz_lines_fullscreen()
+        if killbox_roll in range(1, 2500): vlfs_rect = vlfs.vert_lines_fullscreen()
+        if killbox_roll in range(2501, 5000): hlfs_rect = hlfs.horz_lines_fullscreen()
 
     # player start
     # loads the player when a difficulty is selected
     if on_main_menu == False:
-        pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
-    else: 
-        pass
-
+        player = pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
+        if player.colliderect(vlfs_rect) == True:
+            on_main_menu = True
+            debug("Player collided with vlfs")
+        if player.colliderect(hlfs_rect) == True:
+            on_main_menu = True
+            debug("Player collided with hlfs")
+    else:
+        pass 
+    
     # flip() the display to put your work on screen
     pygame.display.flip()
 
