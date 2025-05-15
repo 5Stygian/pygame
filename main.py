@@ -143,10 +143,11 @@ unpause_button = pygameGUI.Text(
 ); pause_menu_group.add(unpause_button); pause_menu.add(unpause_button)
 
 # sprites
+killbox_group = pygame.sprite.Group()
 ## killbox
 class Killbox(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         self.color = color
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
@@ -157,19 +158,20 @@ class Killbox(pygame.sprite.Sprite):
         for i in range(10):
             self.vlfs = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, self.vlfs)
+        killbox_group.add(self.vlfs)
+        killbox_group.draw(screen)
     
     def horz_lines_fullscreen(self):
         # hlfs - horizontal lines fullscreen
         for i in range(10):
             self.hlfs = pygame.Rect(0, 125*i, screen_dims[0], 60)
             pygame.draw.rect(screen, self.color, self.hlfs)
+        killbox_group.add(self.hlfs)
+        killbox_group.draw(screen)
 
 # killbox objects
 vlfs = Killbox((214, 54, 101), 60, screen_dims[1])
 hlfs = Killbox((214, 54, 101), screen_dims[0], 60)
-
-vlfs_rect = pygame.Rect(vlfs)
-hlfs_rect = pygame.Rect(hlfs)
 
 if debug_mode == True:
     debug(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
@@ -273,19 +275,17 @@ while running:
     
     # killbox spawning
     if on_main_menu == False and killbox_spawn == True:
-        if killbox_roll in range(1, 2500): vlfs_rect = vlfs.vert_lines_fullscreen()
-        if killbox_roll in range(2501, 5000): hlfs_rect = hlfs.horz_lines_fullscreen()
+        if killbox_roll in range(1, 2500): vlfs.vert_lines_fullscreen()
+        if killbox_roll in range(2501, 5000): hlfs.horz_lines_fullscreen()
 
     # player start
     # loads the player when a difficulty is selected
     if on_main_menu == False:
         player = pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
-        if player.colliderect(vlfs_rect) == True:
-            on_main_menu = True
-            debug("Player collided with vlfs")
-        if player.colliderect(hlfs_rect) == True:
-            on_main_menu = True
-            debug("Player collided with hlfs")
+        player_collides = [kb for kb in killbox_group if kb.rect.collide_rect(player)]
+        if player in player_collides:
+            on_main_menu = False
+            debug("Player collided with killbox")
     else:
         pass 
     
