@@ -155,21 +155,25 @@ class Killbox(pygame.sprite.Sprite):
 
     def vert_lines_fullscreen(self):
         # vlfs - vertical lines fullscreen
+        debug("vlfs in class call")
         for i in range(10):
             self.vlfs = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, self.vlfs)
+        return tuple(killbox_group.add(self.vlfs))
     
     def horz_lines_fullscreen(self):
         # hlfs - horizontal lines fullscreen
+        debug("hlfs in class call")
         for i in range(10):
             self.hlfs = pygame.Rect(0, 125*i, screen_dims[0], 60)
             pygame.draw.rect(screen, self.color, self.hlfs)
+        return tuple(killbox_group.add(self.hlfs))
 
 # killbox objects
 vlfs = Killbox((214, 54, 101), 60, screen_dims[1])
 hlfs = Killbox((214, 54, 101), screen_dims[0], 60)
 
-vlfs_rect, hlfs_rect = None, None
+global vlfs_rect, hlfs_rect
 
 if debug_mode == True:
     debug(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
@@ -180,6 +184,7 @@ else:
 ## custom events
 # determines which killbox to spawn every 1.856 seconds
 killbox_spawn = False
+killbox_roll = 0
 draw_bool = False
 DRAW_CHANCE = pygame.event.custom_type()
 pygame.time.set_timer(DRAW_CHANCE, 1856)
@@ -279,11 +284,11 @@ while running:
     # player drawing and collision detection
     if on_main_menu == False: # only draw the player when the program is not on the main menu
         player = pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
-        if pygame.Rect.colliderect(player, vlfs_rect or hlfs_rect):
+        if killbox_roll != 0 and (any(player.rect.colliderect(v.rect) for v in vlfs_rect) or any(player.rect.colliderect(h.rect) for h in hlfs_rect)):
             on_main_menu = False
             debug("Player collided with killbox")
     else:
-        pass 
+        pass
     
     # flip() the display to put your work on screen
     pygame.display.flip()
