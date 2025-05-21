@@ -159,7 +159,7 @@ class Killbox(pygame.sprite.Sprite):
         for i in range(10):
             self.vlfs = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, self.vlfs)
-        return tuple(killbox_group.add(self.vlfs))
+        return killbox_group.add(self.vlfs)
     
     def horz_lines_fullscreen(self):
         # hlfs - horizontal lines fullscreen
@@ -167,7 +167,7 @@ class Killbox(pygame.sprite.Sprite):
         for i in range(10):
             self.hlfs = pygame.Rect(0, 125*i, screen_dims[0], 60)
             pygame.draw.rect(screen, self.color, self.hlfs)
-        return tuple(killbox_group.add(self.hlfs))
+        return killbox_group.add(self.hlfs)
 
 # killbox objects
 vlfs = Killbox((214, 54, 101), 60, screen_dims[1])
@@ -269,7 +269,6 @@ while running:
         player_pos.y += abs(player_radius - player_pos.y)
     if not (player_pos.y + player_radius < screen.get_height()):
         player_pos.y -= abs(screen.get_height() - player_pos.y - player_radius)
-    # player end
 
     # g/ui
     ## main menu
