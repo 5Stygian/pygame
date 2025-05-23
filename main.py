@@ -155,18 +155,20 @@ class Killbox(pygame.sprite.Sprite):
 
     def vert_lines_fullscreen(self):
         # vlfs - vertical lines fullscreen
-        debug("vlfs in class call")
+        debug("vlfs in class call 1")
         for i in range(10):
             self.vlfs = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, self.vlfs)
+        debug("vlfs in class call 2")
         return killbox_group.add(self.vlfs)
     
     def horz_lines_fullscreen(self):
         # hlfs - horizontal lines fullscreen
-        debug("hlfs in class call")
+        debug("hlfs in class call 1")
         for i in range(10):
             self.hlfs = pygame.Rect(0, 125*i, screen_dims[0], 60)
             pygame.draw.rect(screen, self.color, self.hlfs)
+        debug("hlfs in class call 2")
         return killbox_group.add(self.hlfs)
 
 # killbox objects
@@ -239,8 +241,9 @@ while running:
             if on_main_menu == False:
                 killbox_roll = random.randint(1,10000)
                 killbox_spawn = not(killbox_spawn)
-                if killbox_roll in range(1, 2500): debug("Vert lines spawned")
-                if killbox_roll in range(2500, 5001): debug("Horz lines spawned")
+                if killbox_roll in range(1, 2500): debug(f"Vert lines rolled {killbox_roll}")
+                if killbox_roll in range(2500, 5001): debug(f"Horz lines rolled {killbox_roll}")
+                if killbox_roll in range(5001, 10000): debug(killbox_roll)
             
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -283,8 +286,8 @@ while running:
     # player drawing and collision detection
     if on_main_menu == False: # only draw the player when the program is not on the main menu
         player = pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
-        if killbox_roll != 0 and (any(player.rect.colliderect(v.rect) for v in vlfs_rect) or any(player.rect.colliderect(h.rect) for h in hlfs_rect)):
-            on_main_menu = False
+        if killbox_roll != 0 and killbox_roll not in range(5001, 10000) and any(player.rect.colliderect(v.rect) for v in vlfs_rect) or any(player.rect.colliderect(h.rect) for h in hlfs_rect):
+            on_main_menu = True
             debug("Player collided with killbox")
     else:
         pass
