@@ -175,7 +175,7 @@ class Killbox(pygame.sprite.Sprite):
 vlfs = Killbox((214, 54, 101), 60, screen_dims[1])
 hlfs = Killbox((214, 54, 101), screen_dims[0], 60)
 
-global vlfs_rect, hlfs_rect
+vlfs_rect, hlfs_rect = [], []
 
 if debug_mode == True:
     debug(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
@@ -286,9 +286,10 @@ while running:
     # player drawing and collision detection
     if on_main_menu == False: # only draw the player when the program is not on the main menu
         player = pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
-        if killbox_roll != 0 and killbox_roll not in range(5001, 10000) and any(player.rect.colliderect(v.rect) for v in vlfs_rect) or any(player.rect.colliderect(h.rect) for h in hlfs_rect):
-            on_main_menu = True
-            debug("Player collided with killbox")
+        if killbox_roll not in range(5001, 10000) and killbox_roll != 0: 
+            if any(player.rect.colliderect(v.rect) for v in vlfs_rect) or any(player.rect.colliderect(h.rect) for h in hlfs_rect):
+                on_main_menu = True
+                debug("Player collided with killbox")
     else:
         pass
     
