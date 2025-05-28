@@ -289,12 +289,14 @@ while running:
         if killbox_roll in range(2501, 5000): hlfs_rect = hlfs.horz_lines_fullscreen()
 
     # player drawing and collision detection
-    if on_main_menu == False: # only draw the player when the program is not on the main menu
+    if on_main_menu == False: # only logic this logic when not on the main menu
         player = pygame.draw.circle(screen, "#6ddac0", player_pos, player_radius)
         if killbox_roll not in range(5001, 10000) and killbox_roll != 0: 
+            # check for collisions
             if any(player_rect.colliderect(v) for v in vlfs_rect) or any(player_rect.colliderect(h) for h in hlfs_rect):
                 vlfs_rect, hlfs_rect, rects = [], [], []
                 player_pos = pygame.Vector2(screen_dims[0]/2, screen_dims[1]/2)
+                killbox_roll = 0
                 on_main_menu = True
                 debug("Player collided with killbox")
     else:

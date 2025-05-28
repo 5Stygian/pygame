@@ -12,6 +12,7 @@
         "MOUSEBUTTONDOWN",
         "MOUSEBUTTONUP",
         "ndurration",
+        "rects",
         "vlfs",
         "wght"
     ]
