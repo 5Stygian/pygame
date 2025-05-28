@@ -38,6 +38,7 @@ start_time = datetime.datetime.now()
 # player vars
 player_move_speed = 400
 player_radius = 15
+player_rect = pygame.Rect(0, 0, player_radius*2, player_radius*2)
 player_pos = pygame.Vector2(screen_dims[0]/2, screen_dims[1]/2)
 dodge_dist = 5000
 touchable = True
@@ -143,7 +144,7 @@ unpause_button = pygameGUI.Text(
 ); pause_menu_group.add(unpause_button); pause_menu.add(unpause_button)
 
 # sprites
-killbox_group = pygame.sprite.Group()
+rects = []
 ## killbox
 class Killbox(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
@@ -156,20 +157,24 @@ class Killbox(pygame.sprite.Sprite):
     def vert_lines_fullscreen(self):
         # vlfs - vertical lines fullscreen
         debug("vlfs in class call 1")
+        rects = []
         for i in range(10):
-            self.vlfs = pygame.Rect(150*i, 0, 60, screen_dims[1])
-            pygame.draw.rect(screen, self.color, self.vlfs)
+            rect = pygame.Rect(150*i, 0, 60, screen_dims[1])
+            pygame.draw.rect(screen, self.color, rect)
+            rects.append(rect)
         debug("vlfs in class call 2")
-        return killbox_group.add(self.vlfs)
+        return rects
     
     def horz_lines_fullscreen(self):
         # hlfs - horizontal lines fullscreen
         debug("hlfs in class call 1")
+        rects = []
         for i in range(10):
-            self.hlfs = pygame.Rect(0, 125*i, screen_dims[0], 60)
-            pygame.draw.rect(screen, self.color, self.hlfs)
+            rect = pygame.Rect(0, 125*i, screen_dims[0], 60)
+            pygame.draw.rect(screen, self.color, rect)
+            rects.append(rect)
         debug("hlfs in class call 2")
-        return killbox_group.add(self.hlfs)
+        return rects
 
 # killbox objects
 vlfs = Killbox((214, 54, 101), 60, screen_dims[1])
@@ -285,9 +290,11 @@ while running:
 
     # player drawing and collision detection
     if on_main_menu == False: # only draw the player when the program is not on the main menu
-        player = pygame.draw.circle(screen, "#56ad99", player_pos, player_radius)
+        player = pygame.draw.circle(screen, "#6ddac0", player_pos, player_radius)
         if killbox_roll not in range(5001, 10000) and killbox_roll != 0: 
-            if any(player.rect.colliderect(v.rect) for v in vlfs_rect) or any(player.rect.colliderect(h.rect) for h in hlfs_rect):
+            if any(player_rect.colliderect(v) for v in vlfs_rect) or any(player_rect.colliderect(h) for h in hlfs_rect):
+                vlfs_rect, hlfs_rect, rects = [], [], []
+                player_pos = pygame.Vector2(screen_dims[0]/2, screen_dims[1]/2)
                 on_main_menu = True
                 debug("Player collided with killbox")
     else:
