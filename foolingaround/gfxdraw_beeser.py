@@ -27,7 +27,7 @@ p3_y_lim = 720
 p3_y_rand = r.randint(-50,50)
 
 I_GB = pygame.event.custom_type()
-pygame.time.set_timer(I_P1, 10)
+pygame.time.set_timer(I_GB, 10)
 
 CLEAR = pygame.event.custom_type()
 pygame.time.set_timer(CLEAR, 5000)
