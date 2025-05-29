@@ -26,7 +26,7 @@ p3_y = 720
 p3_y_lim = 720
 p3_y_rand = r.randint(-50,50)
 
-I_P1 = pygame.event.custom_type()
+I_GB = pygame.event.custom_type()
 pygame.time.set_timer(I_P1, 10)
 
 CLEAR = pygame.event.custom_type()
@@ -39,17 +39,21 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        if event.type == I_P1:
+        if event.type == I_GB:
             p2_x += r.randint(-50,50)
             p2_y += r.randint(-50,50)
 
             p3_x_rand = r.randint(-50,50)
-            if p3_x_rand < p3_x_lim:
+            if p3_x_rand > p3_x_lim:
                 p3_x = 1280
+            else:
+                p3_x = p3_x_rand
             
             p3_y_rand = r.randint(-50,50)
-            if p3_y_rand < p3_y_lim:
+            if p3_y_rand > p3_y_lim:
                 p3_y = 720
+            else:
+                p3_y = p3_y_rand
 
             pygame.draw.polygon(screen, (0,0,0), [(0,0), (1280,0), (1280,720), (0,720)], 0)
         
