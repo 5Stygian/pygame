@@ -4,6 +4,7 @@
         "collidepoint",
         "colliderect",
         "Felo",
+        "gfxdraw",
         "hlfs",
         "horz",
         "hrcolor",

@@ -15,12 +15,13 @@ itself. Products using code taken from a product using the CC0 v1.0 license must
 '''
 
 import pygame
+import pygame.gfxdraw
 import pygameGUI # thank you max <3
 import random
 import datetime
 
 # print actions to the terminal
-debug_mode = True
+debug_mode = False
 
 # pygame setup
 pygame.init()
@@ -183,9 +184,9 @@ hlfs = Killbox((214, 54, 101), screen_dims[0], 60)
 vlfs_rect, hlfs_rect = [], []
 
 if debug_mode == True:
-    debug(f"\"Just Dodge\" vALPHA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
+    debug(f"\"Just Dodge\" vBETA | Debug mode ({screen_dims[0]}x{screen_dims[1]})")
 else:
-    debug("\"Just Dodge\" vALPHA")
+    print("\"Just Dodge\" vBETA")
 
 # game loop
 ## custom events
@@ -301,7 +302,7 @@ while running:
                 debug("Player collided with killbox")
     else:
         pass
-    
+
     # flip() the display to put your work on screen
     pygame.display.flip()
 
