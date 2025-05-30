@@ -19,6 +19,7 @@ import pygame.gfxdraw
 import pygameGUI # thank you max <3
 import random
 import datetime
+import asyncio
 
 # print actions to the terminal
 debug_mode = False
@@ -146,6 +147,7 @@ unpause_button = pygameGUI.Text(
 
 # sprites
 rects = []
+TELEGRAPH = pygame.event.custom_type()
 ## killbox
 class Killbox(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
@@ -155,10 +157,12 @@ class Killbox(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
 
-    def vert_lines_fullscreen(self):
+    async def vert_lines_fullscreen(self):
         # vlfs - vertical lines fullscreen
         debug("vlfs in class call 1")
         rects = []
+        pygame.time.set_timer(TELEGRAPH, 1, 0)
+        await asyncio.sleep(1)
         for i in range(10):
             rect = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, rect)
@@ -166,10 +170,12 @@ class Killbox(pygame.sprite.Sprite):
         debug("vlfs in class call 2")
         return rects
     
-    def horz_lines_fullscreen(self):
+    async def horz_lines_fullscreen(self):
         # hlfs - horizontal lines fullscreen
         debug("hlfs in class call 1")
         rects = []
+        pygame.time.set_timer(TELEGRAPH, 1, 0)
+        await asyncio.sleep(1)
         for i in range(10):
             rect = pygame.Rect(0, 125*i, screen_dims[0], 60)
             pygame.draw.rect(screen, self.color, rect)
@@ -248,8 +254,16 @@ while running:
                 killbox_roll = random.randint(1,10000)
                 killbox_spawn = not(killbox_spawn)
                 if killbox_roll in range(1, 2500): debug(f"Vert lines rolled {killbox_roll}")
-                if killbox_roll in range(2500, 5001): debug(f"Horz lines rolled {killbox_roll}")
+                if killbox_roll in range(2501, 5000): debug(f"Horz lines rolled {killbox_roll}")
                 if killbox_roll in range(5001, 10000): debug(killbox_roll)
+        
+        if event.type == TELEGRAPH:
+            if killbox_roll in range(1, 2500):
+                for i in range(10):
+                    pygame.draw.polygon(screen, (112, 27, 53), (150*i, 0, 60, screen_dims[1]))
+            if killbox_roll in range(2500, 5001):
+                for i in range(10):
+                    pygame.draw.polygon(screen, (112, 27, 53), (0, 125*i, screen_dims[0], 60))
             
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
