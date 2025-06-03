@@ -161,7 +161,7 @@ class Killbox(pygame.sprite.Sprite):
         # vlfs - vertical lines fullscreen
         debug("vlfs in class call 1")
         rects = []
-        pygame.time.set_timer(TELEGRAPH, 1, 0)
+        pygame.event.post(TELEGRAPH)
         await asyncio.sleep(1)
         for i in range(10):
             rect = pygame.Rect(150*i, 0, 60, screen_dims[1])
@@ -174,7 +174,7 @@ class Killbox(pygame.sprite.Sprite):
         # hlfs - horizontal lines fullscreen
         debug("hlfs in class call 1")
         rects = []
-        pygame.time.set_timer(TELEGRAPH, 1, 0)
+        pygame.event.post(TELEGRAPH)
         await asyncio.sleep(1)
         for i in range(10):
             rect = pygame.Rect(0, 125*i, screen_dims[0], 60)
