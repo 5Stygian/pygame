@@ -15,14 +15,12 @@ itself. Products using code taken from a product using the CC0 v1.0 license must
 '''
 
 import pygame
-import pygame.gfxdraw
 import pygameGUI # thank you max <3
 import random
 import datetime
-import asyncio
 
 # print actions to the terminal
-debug_mode = False
+debug_mode = True
 
 # pygame setup
 pygame.init()
@@ -157,12 +155,11 @@ class Killbox(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
 
-    async def vert_lines_fullscreen(self):
+    def vert_lines_fullscreen(self):
         # vlfs - vertical lines fullscreen
         debug("vlfs in class call 1")
         rects = []
-        pygame.event.post(TELEGRAPH)
-        await asyncio.sleep(1)
+        pygame.event.post(pygame.event.Event(TELEGRAPH))
         for i in range(10):
             rect = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, rect)
@@ -170,12 +167,11 @@ class Killbox(pygame.sprite.Sprite):
         debug("vlfs in class call 2")
         return rects
     
-    async def horz_lines_fullscreen(self):
+    def horz_lines_fullscreen(self):
         # hlfs - horizontal lines fullscreen
         debug("hlfs in class call 1")
         rects = []
-        pygame.event.post(TELEGRAPH)
-        await asyncio.sleep(1)
+        pygame.event.post(pygame.event.Event(TELEGRAPH))
         for i in range(10):
             rect = pygame.Rect(0, 125*i, screen_dims[0], 60)
             pygame.draw.rect(screen, self.color, rect)
@@ -259,11 +255,15 @@ while running:
         
         if event.type == TELEGRAPH:
             if killbox_roll in range(1, 2500):
+                debug("vlfs telegraph event call 1")
                 for i in range(10):
                     pygame.draw.polygon(screen, (112, 27, 53), (150*i, 0, 60, screen_dims[1]))
+                debug("vlfs telegraph event call 2")
             if killbox_roll in range(2500, 5001):
+                debug("hlfs telegraph event call 1")
                 for i in range(10):
                     pygame.draw.polygon(screen, (112, 27, 53), (0, 125*i, screen_dims[0], 60))
+                debug("hlfs telegraph event call 2")
             
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
