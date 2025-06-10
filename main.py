@@ -14,6 +14,12 @@ is fully allowed. Credit must be given to the original authors of the code, alon
 itself. Products using code taken from a product using the CC0 v1.0 license must also use the CC0 v1.0 license.
 '''
 
+'''
+CONTROLS:
+wasd for movement
+spacebar for dash
+'''
+
 import pygame
 import pygameGUI # thank you max <3
 import random
