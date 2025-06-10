@@ -20,7 +20,7 @@ import random
 import datetime
 
 # print actions to the terminal
-debug_mode = True
+debug_mode = False
 
 # pygame setup
 pygame.init()
@@ -37,7 +37,7 @@ start_time = datetime.datetime.now()
 
 # player vars
 player_move_speed = 400
-player_radius = 15
+player_radius = 10
 player_rect = pygame.Rect(0, 0, player_radius*2, player_radius*2)
 player_pos = pygame.Vector2(screen_dims[0]/2, screen_dims[1]/2)
 dodge_dist = 5000
@@ -145,7 +145,6 @@ unpause_button = pygameGUI.Text(
 
 # sprites
 rects = []
-TELEGRAPH = pygame.event.custom_type()
 ## killbox
 class Killbox(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
@@ -159,7 +158,7 @@ class Killbox(pygame.sprite.Sprite):
         # vlfs - vertical lines fullscreen
         debug("vlfs in class call 1")
         rects = []
-        pygame.event.post(pygame.event.Event(TELEGRAPH))
+        pygame.event.post(pygame.event.Event(KILLBOX_EVENT))
         for i in range(10):
             rect = pygame.Rect(150*i, 0, 60, screen_dims[1])
             pygame.draw.rect(screen, self.color, rect)
@@ -171,7 +170,7 @@ class Killbox(pygame.sprite.Sprite):
         # hlfs - horizontal lines fullscreen
         debug("hlfs in class call 1")
         rects = []
-        pygame.event.post(pygame.event.Event(TELEGRAPH))
+        pygame.event.post(pygame.event.Event(KILLBOX_EVENT))
         for i in range(10):
             rect = pygame.Rect(0, 125*i, screen_dims[0], 60)
             pygame.draw.rect(screen, self.color, rect)
@@ -196,12 +195,18 @@ else:
 killbox_spawn = False
 killbox_roll = 0
 draw_bool = False
+
+# events
+telegraph_active = False
+telegraph_type = None
+telegraph_end_time = 0
+telegraph_delay = 1800 # ms
+KILLBOX_EVENT = pygame.event.custom_type()
 DRAW_CHANCE = pygame.event.custom_type()
 pygame.time.set_timer(DRAW_CHANCE, 1856)
 ## mainloop
 while running:
     # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -246,31 +251,49 @@ while running:
         
         # killbox events
         if event.type == DRAW_CHANCE:
-            if on_main_menu == False:
-                killbox_roll = random.randint(1,10000)
-                killbox_spawn = not(killbox_spawn)
-                if killbox_roll in range(1, 2500): debug(f"Vert lines rolled {killbox_roll}")
-                if killbox_roll in range(2501, 5000): debug(f"Horz lines rolled {killbox_roll}")
-                if killbox_roll in range(5001, 10000): debug(killbox_roll)
-        
-        if event.type == TELEGRAPH:
+            if not on_main_menu:
+                killbox_roll = random.randint(1, 10000)
+                killbox_spawn = not killbox_spawn
+                if killbox_roll in range(1, 2500):
+                    debug(f"Vert lines telegraph {killbox_roll}")
+                    telegraph_active = True
+                    telegraph_type = 'vert'
+                    telegraph_end_time = pygame.time.get_ticks() + telegraph_delay
+                    pygame.time.set_timer(KILLBOX_EVENT, telegraph_delay, True)
+                elif killbox_roll in range(2501, 5000):
+                    debug(f"Horz lines telegraph {killbox_roll}")
+                    telegraph_active = True
+                    telegraph_type = 'horz'
+                    telegraph_end_time = pygame.time.get_ticks() + telegraph_delay
+                    pygame.time.set_timer(KILLBOX_EVENT, telegraph_delay, True)
+                else:
+                    debug(killbox_roll)
+
+        # Remove the TELEGRAPH_EVENT handler entirely
+
+        if event.type == KILLBOX_EVENT:
             if killbox_roll in range(1, 2500):
-                debug("vlfs telegraph event call 1")
-                for i in range(10):
-                    pygame.draw.polygon(screen, (112, 27, 53), (150*i, 0, 60, screen_dims[1]))
-                debug("vlfs telegraph event call 2")
-            if killbox_roll in range(2500, 5001):
-                debug("hlfs telegraph event call 1")
-                for i in range(10):
-                    pygame.draw.polygon(screen, (112, 27, 53), (0, 125*i, screen_dims[0], 60))
-                debug("hlfs telegraph event call 2")
-            
+                vlfs_rect = vlfs.vert_lines_fullscreen()
+            elif killbox_roll in range(2501, 5000):
+                hlfs_rect = hlfs.horz_lines_fullscreen()
+
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
     
+    # Draw telegraph if active
+    if telegraph_active:
+        if telegraph_type == 'vert':
+            for i in range(10):
+                pygame.draw.rect(screen, (112, 27, 53), (150*i, 0, 60, screen_dims[1]))
+        elif telegraph_type == 'horz':
+            for i in range(10):
+                pygame.draw.rect(screen, (112, 27, 53), (0, 125*i, screen_dims[0], 60))
+        # Disable telegraph after time is up
+        if pygame.time.get_ticks() > telegraph_end_time:
+            telegraph_active = False
+            telegraph_type = None
+
     # player movement
-    # if a key is held, move in that direction
-    # from boilerplate found in docs
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= player_move_speed * dt
@@ -282,7 +305,6 @@ while running:
         player_pos.x += player_move_speed * dt
 
     # prevents player from moving off the screen
-    # thanks to max knoth for writing this approximately 10 minutes after first installing pygame
     if not (0 < player_pos.x - player_radius):
         player_pos.x += abs(player_radius - player_pos.x)
     if not (player_pos.x + player_radius < screen.get_width()):
@@ -294,20 +316,21 @@ while running:
         player_pos.y -= abs(screen.get_height() - player_pos.y - player_radius)
 
     # g/ui
-    ## main menu
     if on_main_menu == True:
         menu.draw(screen)
     
-    # killbox spawning
-    if on_main_menu == False and killbox_spawn == True:
-        if killbox_roll in range(1, 2500): vlfs_rect = vlfs.vert_lines_fullscreen()
-        if killbox_roll in range(2501, 5000): hlfs_rect = hlfs.horz_lines_fullscreen()
-
     # player drawing and collision detection
-    if on_main_menu == False: # only logic this logic when not on the main menu
+    if on_main_menu == False:
         player = pygame.draw.circle(screen, "#6ddac0", player_pos, player_radius)
-        if killbox_roll not in range(5001, 10000) and killbox_roll != 0: 
-            # check for collisions
+        # Only check collision and draw killboxes if telegraph is NOT active
+        if not telegraph_active and (killbox_roll not in range(5001, 10000) and killbox_roll != 0):
+            # Draw killboxes
+            for v in vlfs_rect:
+                pygame.draw.rect(screen, (214, 54, 101), v)
+            for h in hlfs_rect:
+                pygame.draw.rect(screen, (214, 54, 101), h)
+            # Update player_rect position for collision
+            player_rect.center = (int(player_pos.x), int(player_pos.y))
             if any(player_rect.colliderect(v) for v in vlfs_rect) or any(player_rect.colliderect(h) for h in hlfs_rect):
                 vlfs_rect, hlfs_rect, rects = [], [], []
                 player_pos = pygame.Vector2(screen_dims[0]/2, screen_dims[1]/2)
@@ -317,12 +340,7 @@ while running:
     else:
         pass
 
-    # flip() the display to put your work on screen
     pygame.display.flip()
-
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
     dt = clock.tick(60) / 1000
 
 if debug_mode == True:
