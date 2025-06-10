@@ -18,6 +18,7 @@ itself. Products using code taken from a product using the CC0 v1.0 license must
 CONTROLS:
 wasd for movement
 spacebar for dash
+dont touch the red stuff
 '''
 
 import pygame
