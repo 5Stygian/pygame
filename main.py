@@ -85,13 +85,6 @@ def start_hard():
     load()
     debug("Hard mode")
 
-## gui functions
-def pause():
-    pass
-
-def unpause():
-    pass
-
 # g/ui
 ## main menu
 menu_group = pygame.sprite.Group()
@@ -122,26 +115,6 @@ quit_button = pygameGUI.Text(
     (255,255,255),
     (0, 0)
 ); menu_group.add(quit_button); menu.add(quit_button)
-## pause menu
-pause_menu_group = pygame.sprite.Group()
-on_pause_menu = False
-
-pause_menu = pygameGUI.Menu(
-    "Paused",
-    (255,255,255),
-    font,
-    350, 500,
-    "#00000000",
-    pos=(screen_dims[0]/2,screen_dims[1]/2),
-    hrcolor="#00000000"
-); pause_menu_group.add(pause_menu)
-
-unpause_button = pygameGUI.Text(
-    "Unpause",
-    font,
-    (255, 255, 255),
-    (0, 0)
-); pause_menu_group.add(unpause_button); pause_menu.add(unpause_button)
 
 # sprites
 rects = []
@@ -233,12 +206,6 @@ while running:
                 player_pos.x += dodge_dist * dt
                 touchable = True
                 debug("Dodge executed | right")
-            
-            # open the pause menu
-            if event.key == pygame.K_ESCAPE:
-                on_pause_menu = True
-                if on_main_menu == False and on_pause_menu == True:
-                    pause_menu.draw(screen)
         
         # gui events
         if event.type == pygame.MOUSEBUTTONUP:     
@@ -247,7 +214,6 @@ while running:
             if on_main_menu == True:    
                 if play_button in clickedSprites: load()
                 if quit_button in clickedSprites: Felo_Bit_Tool_Industrial_Bitholder_and_Driver_9_Pieces()
-                if unpause_button in clickedSprites: pause()
         
         # killbox events
         if event.type == DRAW_CHANCE:
